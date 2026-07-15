@@ -1,289 +1,270 @@
-# Claude SEO: Universal SEO Analysis Skill
+# Marketing- : Bundled Claude Code Marketing Toolkit
 
 ## Project Overview
 
-This repository contains **Claude SEO**, a Tier 4 Claude Code skill for comprehensive
-SEO analysis across all industries. It follows the Agent Skills open standard and the
-3-layer architecture (directive, orchestration, execution). 25 sub-skills (21 core +
-1 orchestrator + 1 framework integration + 2 extension mirrors), 18 sub-agents (15 core +
-1 framework integration + 2 extension mirrors), and an extensible reference
-system cover technical SEO, content quality,
-schema markup, image optimization, sitemap architecture, AI search optimization,
-local SEO (GBP, citations, reviews, map pack), maps intelligence, semantic topic
-clustering, search experience optimization (SXO), SEO drift monitoring, e-commerce
-SEO, and international SEO with cultural adaptation profiles.
+This repository (`Evenmore2018/Marketing-`) is a **marketing toolkit for Claude Code**
+that bundles two independent Claude Code plugins in one checkout:
 
-## Architecture
+| Plugin | Location | Version | Author | What it does |
+|---|---|---|---|---|
+| **claude-seo** | repo root (`skills/`, `agents/`, `scripts/`, …) | v2.2.0 | AgriciDaniel | Tier‑4 SEO analysis skill: 25 sub‑skills, 18 sub‑agents, 50 Python scripts covering technical SEO, content/E‑E‑A‑T, schema, sitemaps, Core Web Vitals, local SEO, backlinks, AI/GEO, e‑commerce, hreflang, SXO, clustering, drift, and Google APIs. |
+| **marketing-skills** | `marketingskills/` | v2.8.10 | Corey Haines | 47 model‑invoked marketing skills: CRO, copywriting, cold email, prospecting, paid ads, ad creative, SMS, pricing, referrals, RevOps, PR, launches, and more. |
+
+The root `.claude-plugin/plugin.json` / `marketplace.json` describe **claude-seo** —
+it is the primary plugin and the source of the bulk of this repo. The
+`marketingskills/` subtree is the unpacked upstream
+[`coreyhaines31/marketingskills`](https://github.com/coreyhaines31/marketingskills)
+plugin, kept self‑contained with its own manifest, README, and `skills/`.
+
+> **Note on provenance:** claude-seo upstream lives at
+> [`AgriciDaniel/claude-seo`](https://github.com/AgriciDaniel/claude-seo) (public) and
+> a private mirror. Those repos have their own release ceremony (public/private
+> promotion, `/release-blog`, tagging). **None of that applies here** — this repo is a
+> downstream bundle, not the claude-seo dev repo. Work in this repo follows the git
+> workflow in [Git Workflow](#git-workflow) below.
+
+---
+
+## Plugin 1 — claude-seo (repo root)
+
+Follows the Agent Skills open standard and a 3‑layer architecture (directive,
+orchestration, execution). Progressive disclosure: metadata always loaded,
+instructions on activation, resources on demand.
+
+### Architecture
 
 ```
-claude-seo/
-  CLAUDE.md                          # Project instructions (this file)
-  CONTRIBUTORS.md                    # Community credits (Pro Hub Challenge)
-  AGENTS.md                          # Multi-platform agent instructions (Cursor, Antigravity)
+/ (claude-seo plugin root)
+  CLAUDE.md                          # This file
   .claude-plugin/
-    plugin.json                    # Plugin manifest (v2.2.0)
-    marketplace.json               # Marketplace catalog for distribution
+    plugin.json                    # claude-seo manifest (v2.2.0)
+    marketplace.json               # Marketplace catalog
   skills/                            # 25 sub-skills (auto-discovered)
-    seo/                           # Main orchestrator skill
-      SKILL.md                     # Entry point, routing table, core rules
-      references/                  # On-demand knowledge files (12 files)
-    seo-audit/SKILL.md            # Full site audit with parallel agents
-    seo-page/SKILL.md            # Deep single-page analysis
-    seo-technical/SKILL.md       # Technical SEO (9 categories)
-    seo-content/SKILL.md         # E-E-A-T and content quality
-    seo-schema/SKILL.md          # Schema.org markup detection/generation
-    seo-sitemap/SKILL.md         # XML sitemap analysis/generation
-    seo-images/SKILL.md          # Image optimization analysis
-    seo-geo/SKILL.md             # AI search / GEO optimization
-    seo-local/SKILL.md           # Local SEO (GBP, citations, reviews, map pack)
-    seo-maps/SKILL.md            # Maps intelligence (geo-grid, GBP audit, reviews, competitors)
-    seo-plan/SKILL.md            # Strategic SEO planning
-    seo-programmatic/SKILL.md    # Programmatic SEO at scale
-    seo-competitor-pages/SKILL.md # Competitor comparison pages
-    seo-hreflang/SKILL.md       # International SEO / hreflang
-    seo-google/                  # Google SEO APIs
-      SKILL.md
-      references/                # API reference files (10 files)
-    seo-backlinks/SKILL.md      # Backlink profile analysis
-    seo-cluster/                 # Semantic topic clustering (v1.9.0, by Lutfiya Miller)
-      SKILL.md
-      references/                # Clustering methodology, architecture, workflow
-      templates/                 # cluster-map.html interactive visualization
-    seo-sxo/                     # Search Experience Optimization (v1.9.0, by Florian Schmitz)
-      SKILL.md
-      references/                # Page-type taxonomy, user stories, personas, wireframes
-    seo-drift/                   # SEO drift monitoring (v1.9.0, by Dan Colta)
-      SKILL.md
-      references/                # Comparison rules (17 rules, 3 severity levels)
-    seo-ecommerce/               # E-commerce SEO (v1.9.0, by Matej Marjanovic)
-      SKILL.md
-      references/                # Marketplace API endpoints
-    seo-dataforseo/SKILL.md     # Live SEO data via DataForSEO MCP (extension mirror)
-    seo-image-gen/              # AI image generation for SEO assets (extension mirror)
-      SKILL.md
-      references/                # Image gen reference files (7 files)
-  agents/                          # 18 subagents (auto-discovered)
-    seo-technical.md             # Crawlability, indexability, security
-    seo-content.md               # E-E-A-T, readability, thin content
-    seo-schema.md                # Structured data validation
-    seo-sitemap.md               # Sitemap quality gates
-    seo-performance.md           # Core Web Vitals, page speed
-    seo-visual.md                # Screenshots, mobile rendering
-    seo-geo.md                   # AI crawler access, GEO, citability
-    seo-local.md                 # GBP, NAP, citations, reviews, local schema
-    seo-maps.md                  # Geo-grid, GBP audit, reviews, competitor radius
-    seo-google.md                # Google API analyst (CrUX, GSC, GA4)
-    seo-backlinks.md             # Backlink profile analyst (Moz, Bing, CC, verify)
-    seo-dataforseo.md            # DataForSEO data analyst
-    seo-image-gen.md             # SEO image audit analyst
-    seo-cluster.md               # Semantic clustering analysis
-    seo-sxo.md                   # Search experience optimization
-    seo-drift.md                 # SEO drift monitoring
-    seo-ecommerce.md             # E-commerce SEO analysis
-  hooks/                           # Quality gate hooks
-    hooks.json                   # PostToolUse schema validation
-  scripts/                         # Python execution scripts (50 tracked + dev-only helpers)
-    google_auth.py               # Credential management (OAuth, SA, API key, 4-tier detection)
-    backlinks_auth.py            # Backlink API credential management (Moz, Bing)
-    moz_api.py                   # Moz Link Explorer API (DA/PA, spam, domains, anchors)
-    bing_webmaster.py            # Bing Webmaster Tools API (links, competitor comparison)
-    commoncrawl_graph.py         # Common Crawl web graph parser (PageRank, in-degree)
-    verify_backlinks.py          # Backlink existence verification crawler
-    pagespeed_check.py           # PSI v5 + CrUX API
-    crux_history.py              # CrUX History API (25-week trends)
-    gsc_query.py                 # Search Console (queries, pages, sitemaps, sites)
-    gsc_inspect.py               # URL Inspection (single + batch)
-    indexing_notify.py           # Indexing API v3 (URL_UPDATED/URL_DELETED)
-    ga4_report.py                # GA4 organic traffic reports
-    google_report.py             # PDF/HTML report generator (WeasyPrint + matplotlib)
-    youtube_search.py            # YouTube Data API v3
-    nlp_analyze.py               # Cloud Natural Language API
-    keyword_planner.py           # Google Ads Keyword Planner
-    fetch_page.py                # Page fetcher with UA rotation
-    parse_html.py                # HTML parser for SEO elements
-    capture_screenshot.py        # Playwright screenshots
-    analyze_visual.py            # Visual analysis helper
-    drift_baseline.py            # SEO drift baseline capture (SQLite)
-    drift_compare.py             # SEO drift comparison engine (17 rules)
-    drift_report.py              # SEO drift HTML report generator
-    drift_history.py             # SEO drift history query
-    dataforseo_costs.py          # DataForSEO cost estimation and budget tracking
-    dataforseo_merchant.py       # Google Shopping / Amazon data fetching
-    dataforseo_normalize.py      # DataForSEO response normalization utility
-    sync_flow.py                 # FLOW prompt library sync (GitHub API, CC BY 4.0 headers, --dry-run, --ref)
-    url_safety.py                # Canonical URL/SSRF safety module (validate, DNS-pin, safe fetch)
-    render_page.py               # Shared headless renderer (SPA-aware, Playwright)
-    lcp_subparts.py              # LCP subparts breakdown via CrUX API
-    preload_check.py             # Speculation Rules / bfcache / prerender / preload detector
-    agent_ux_check.py            # Agent-friendly page auditor
-    content_quality.py           # QRG-aligned content quality detector
-    content_humanize.py          # AI-pattern remover (rewrites AI-typical phrasing)
-    content_verify.py            # Claim extractor + citation-gap detector
-    schema_generate.py           # JSON-LD generators for high-leverage v2 schema types
-    schema_ecommerce_validate.py # Product schema validator (merchant-listing requirements)
-    iptc_ai_label.py             # IPTC DigitalSourceType audit/injection for AI imagery
-    parasite_risk.py             # Parasite-SEO risk scanner
-    gbp_deprecation_lint.py      # GBP feature-deprecation linter
-    domain_history.py            # Expired-domain heritage check
-    seo_updates.py               # Primary-source Google updates query tool
-    indexnow_submit.py           # IndexNow submitter
-    ucp_check.py                 # UCP (Universal Commerce Protocol) profile auditor
-    unlighthouse_run.py          # Unlighthouse CLI wrapper (site-wide Lighthouse)
-    validate_backlink_report.py  # Backlink report validation
-    portability_check.py         # Cross-platform portability lint for SKILL.md files
-    release_sign.py              # SHA-256 manifest generator for release signing
-    verify_release.py            # Verify checkout integrity against a release manifest
-    mobile_analysis.py           # Mobile rendering analysis (gitignored, dev-only)
-  schema/                          # Schema.org JSON-LD templates
-  extensions/                      # Optional add-on install helpers
-    dataforseo/                  # DataForSEO MCP install scripts
-    firecrawl/                   # Firecrawl MCP install scripts
-    banana/                      # Banana MCP install scripts
-  docs/                            # Extended documentation
+    seo/                           # Main orchestrator (SKILL.md + references/)
+    seo-audit/  seo-page/  seo-technical/  seo-content/  seo-schema/
+    seo-sitemap/  seo-images/  seo-geo/  seo-local/  seo-maps/  seo-plan/
+    seo-programmatic/  seo-competitor-pages/  seo-hreflang/  seo-google/
+    seo-backlinks/  seo-cluster/  seo-sxo/  seo-drift/  seo-ecommerce/
+    seo-dataforseo/  seo-image-gen/            # extension mirrors
+  agents/                            # 18 subagents (auto-discovered, *.md)
+  hooks/
+    hooks.json                     # PostToolUse Edit|Write -> validate-schema.py
+    run-python-hook.js             # Node shim that runs the Python hook
+  scripts/                           # 50 tracked Python scripts (+ dev-only helpers)
+  schema/                            # Schema.org JSON-LD templates
+  extensions/                        # Optional MCP add-on installers
+    dataforseo/  firecrawl/  banana/  (+ ahrefs, se-ranking, profound, bing, unlighthouse)
+  tests/                             # 26 pytest modules (README badge: 326 passing)
+  docs/                              # Extended documentation
+  requirements.txt  pyproject.toml   # Python deps + packaging
+  install.sh / install.ps1           # Installers (uninstall.sh / .ps1)
+  .devcontainer/devcontainer.json    # Python 3.12 dev container
 ```
 
-## Commands
+### Skills (auto-discovered under `skills/`)
+
+`seo` (orchestrator), `seo-audit`, `seo-page`, `seo-technical`, `seo-content`,
+`seo-schema`, `seo-sitemap`, `seo-images`, `seo-geo`, `seo-local`, `seo-maps`,
+`seo-plan`, `seo-programmatic`, `seo-competitor-pages`, `seo-hreflang`,
+`seo-google` (+10 API reference files), `seo-backlinks`, `seo-cluster`,
+`seo-sxo`, `seo-drift`, `seo-ecommerce`, `seo-dataforseo`, `seo-image-gen`.
+
+### Agents (`agents/*.md`, invoked via the Agent tool — never via Bash)
+
+`seo-technical`, `seo-content`, `seo-schema`, `seo-sitemap`, `seo-performance`,
+`seo-visual`, `seo-geo`, `seo-local`, `seo-maps`, `seo-google`, `seo-backlinks`,
+`seo-dataforseo`, `seo-image-gen`, `seo-cluster`, `seo-sxo`, `seo-drift`,
+`seo-ecommerce`.
+
+### Key scripts (`scripts/`, 50 tracked)
+
+Auth/safety: `google_auth.py`, `backlinks_auth.py`, `url_safety.py`.
+Google APIs: `pagespeed_check.py`, `crux_history.py`, `lcp_subparts.py`,
+`gsc_query.py`, `gsc_inspect.py`, `indexing_notify.py`, `ga4_report.py`,
+`nlp_analyze.py`, `youtube_search.py`, `keyword_planner.py`.
+Backlinks: `moz_api.py`, `bing_webmaster.py`, `commoncrawl_graph.py`,
+`verify_backlinks.py`, `validate_backlink_report.py`.
+Fetch/render: `fetch_page.py`, `parse_html.py`, `render_page.py`,
+`capture_screenshot.py`, `analyze_visual.py`, `preload_check.py`,
+`agent_ux_check.py`.
+Content: `content_quality.py`, `content_humanize.py`, `content_verify.py`.
+Schema: `schema_generate.py`, `schema_ecommerce_validate.py`, `iptc_ai_label.py`.
+Drift: `drift_baseline.py`, `drift_compare.py`, `drift_report.py`,
+`drift_history.py`.
+DataForSEO: `dataforseo_costs.py`, `dataforseo_merchant.py`, `dataforseo_normalize.py`.
+Reporting: `google_report.py` (canonical report generator).
+Ops/misc: `sync_flow.py`, `parasite_risk.py`, `gbp_deprecation_lint.py`,
+`domain_history.py`, `seo_updates.py`, `indexnow_submit.py`, `ucp_check.py`,
+`unlighthouse_run.py`, `portability_check.py`, `release_sign.py`,
+`verify_release.py`.
+
+### Commands (from the `seo` orchestrator)
 
 | Command | Purpose |
-|---------|---------|
+|---|---|
 | `/seo audit <url>` | Full site audit with up to 15 parallel subagents |
 | `/seo page <url>` | Deep single-page analysis |
 | `/seo technical <url>` | Technical SEO audit (9 categories) |
 | `/seo content <url>` | E-E-A-T and content quality analysis |
-| `/seo content-brief <topic>` | Detailed SEO content brief: keywords, outline, internal links |
+| `/seo content-brief <topic>` | SEO content brief: keywords, outline, internal links |
 | `/seo schema <url>` | Schema.org detection, validation, generation |
 | `/seo sitemap <url>` | XML sitemap analysis or generation |
-| `/seo images <url or optimize>` | Image SEO: on-page audit, SERP analysis, file optimization |
+| `/seo images <url or optimize>` | Image SEO: on-page audit, SERP analysis, optimization |
 | `/seo geo <url>` | AI search / Generative Engine Optimization |
 | `/seo plan <type>` | Strategic SEO planning by industry |
 | `/seo programmatic` | Programmatic SEO analysis and planning |
 | `/seo competitor-pages` | Competitor comparison page generation |
-| `/seo local <url>` | Local SEO analysis (GBP, citations, reviews, map pack) |
+| `/seo local <url>` | Local SEO (GBP, citations, reviews, map pack) |
 | `/seo maps [command] [args]` | Maps intelligence (geo-grid, GBP audit, reviews, competitors) |
 | `/seo hreflang <url>` | International SEO / hreflang audit |
 | `/seo google [command] [url]` | Google SEO APIs (GSC, PageSpeed, CrUX, Indexing, GA4) |
-| `/seo backlinks <url>` | Backlink profile analysis (free: Moz, Bing, CC; premium: DataForSEO) |
-| `/seo backlinks setup` | Setup instructions for free backlink APIs |
-| `/seo backlinks verify <url>` | Verify known backlinks still exist |
-| `/seo cluster <seed-keyword>` | SERP-based semantic clustering and content architecture |
-| `/seo sxo <url>` | Search Experience Optimization: page-type analysis, personas |
-| `/seo drift baseline <url>` | Capture SEO baseline for change monitoring |
-| `/seo drift compare <url>` | Compare current state to stored baseline |
-| `/seo drift history <url>` | Show drift history over time |
+| `/seo backlinks <url>` | Backlink profile analysis (Moz, Bing, Common Crawl; premium: DataForSEO) |
+| `/seo backlinks setup` \| `verify <url>` | Setup free backlink APIs; verify known backlinks |
+| `/seo cluster <seed-keyword>` | SERP-based semantic clustering |
+| `/seo sxo <url>` | Search Experience Optimization |
+| `/seo drift baseline\|compare\|history <url>` | SEO drift monitoring |
 | `/seo ecommerce <url>` | E-commerce SEO: product schema, marketplace intelligence |
-| `/seo flow <url>` | Apply the FLOW framework: stage prompts and structured search-and-conversion output |
-| `/seo firecrawl [command] <url>` | Full-site crawling and site mapping (extension) |
-| `/seo dataforseo [command]` | Live SEO data via DataForSEO MCP (extension) |
-| `/seo image-gen [use-case] <desc>` | AI image generation for SEO assets (extension) |
+| `/seo flow <url>` | FLOW framework: stage prompts + structured output |
+| `/seo firecrawl \| dataforseo \| image-gen …` | Extension commands |
 
-## Development Rules
+### claude-seo development rules
 
-- Keep SKILL.md files under 500 lines / 5000 tokens
-- Reference files should be focused and under 200 lines
-- Scripts must have docstrings, CLI interface, and JSON output
-- Follow kebab-case naming for all skill directories
-- Agents invoked via Agent tool, never via Bash
-- Python dependencies install into `~/.claude/skills/seo/.venv/`
-- Test with `python3 -m pytest tests/` after changes (if applicable)
+- Keep SKILL.md files under 500 lines / 5000 tokens; reference files under 200 lines.
+- Scripts must have docstrings, a CLI interface, and JSON output.
+- kebab-case naming for all skill directories.
+- Agents are invoked via the Agent tool, **never** via Bash.
+- Python deps install into `~/.claude/skills/seo/.venv/` (repo dev container uses Python 3.12).
+- Run `python3 -m pytest tests/` after changes.
 
-## Security Rules
+### claude-seo security rules
 
-- **Never commit credentials**: `.env`, `client_secret*.json`, `oauth-token.json`, `service_account*.json` are all in `.gitignore`
-- **URL validation**: All scripts that accept user URLs must call `validate_url()` from `google_auth.py` before making API calls. This blocks private IPs, loopback, and GCP metadata endpoints (SSRF protection).
-- **OAuth tokens**: Never store `client_secret` in the token file. Read it from the client_secret.json file at runtime.
-- **No hardcoded paths**: Use `os.path.dirname(os.path.abspath(__file__))` for relative paths, never `/home/username/...`
-- **Config location**: `~/.config/claude-seo/google-api.json` and `~/.config/claude-seo/backlinks-api.json` (user-space, not in repo)
+- **Never commit credentials.** `.env`, `client_secret*.json`, `oauth-token.json`,
+  `service_account*.json` are all in `.gitignore`.
+- **URL validation.** Scripts that accept user URLs must call `validate_url()` from
+  `google_auth.py` (or use `url_safety.py`) before making requests — blocks private
+  IPs, loopback, and GCP metadata endpoints (SSRF / DNS-rebinding protection).
+- **OAuth tokens.** Never store `client_secret` in the token file; read it from
+  `client_secret.json` at runtime.
+- **No hardcoded paths.** Use `os.path.dirname(os.path.abspath(__file__))`.
+- **Config location.** `~/.config/claude-seo/google-api.json` and
+  `~/.config/claude-seo/backlinks-api.json` (user-space, not in repo).
 
-## Report Generation Rules
+### Report generation rules
 
-- **All SEO reports must use `scripts/google_report.py`** as the canonical report generator
-- **Dependencies**: `matplotlib>=3.8.0` (charts) + `weasyprint>=61.0` (HTML-to-PDF), both in `requirements.txt`
-- **Format**: A4 PDF via WeasyPrint + matplotlib charts at 200 DPI
-- **Style**: Clean white title page with navy (#1e3a5f) accent, Times New Roman body font
-- **Color palette**: Navy #1e3a5f (headers), dark gold #b8860b (accents), forest green #2d6a4f (pass), warm amber #d4740e (warnings), deep red #c53030 (fail), warm cream #faf9f7 (backgrounds)
-- **Structure**: Title page → TOC with scores → Executive Summary → Data sections → Recommendations → Methodology
-- **Charts**: 85% width, max-height 120mm, figure captions on every chart, saved to `charts/` at 200 DPI
-- **No `page-break-inside: avoid`** on any element (causes white gaps in WeasyPrint)
-- **Post-generation review**: `_review_pdf()` runs automatically, checking for empty images, thin sections, duplicates
-- **Before presenting any PDF to the user**: verify the review passes (`"status": "PASS"`)
-- **Cross-skill enforcement**: After completing ANY analysis command (audit, page, technical, content, schema, geo, local, maps), offer: "Generate a PDF report? Use `/seo google report`"
-- **Google logo** appears on title page when using Google API data ("Powered by Google APIs")
+- **All SEO reports use `scripts/google_report.py`** (canonical generator).
+- Deps: `matplotlib>=3.8.0` + `weasyprint>=61.0` (both in `requirements.txt`).
+- Format: A4 PDF via WeasyPrint + matplotlib charts at 200 DPI.
+- Palette: navy `#1e3a5f`, dark gold `#b8860b`, forest green `#2d6a4f` (pass),
+  warm amber `#d4740e` (warn), deep red `#c53030` (fail), cream `#faf9f7` (bg).
+  Times New Roman body font.
+- Structure: Title → TOC w/ scores → Executive Summary → Data → Recommendations → Methodology.
+- Charts 85% width, max-height 120mm, captioned, saved to `charts/` at 200 DPI.
+- **No `page-break-inside: avoid`** (causes WeasyPrint white gaps).
+- `_review_pdf()` runs automatically; verify `"status": "PASS"` before presenting a PDF.
+- After any analysis command, offer: "Generate a PDF report? Use `/seo google report`".
 
-## Ecosystem
+### Quality-gate hook
 
-Part of the Claude Code skill family:
-- [Claude Banana](https://github.com/AgriciDaniel/banana-claude) -- standalone image gen (bundled as extension here)
-- [Claude Blog](https://github.com/AgriciDaniel/claude-blog) -- companion blog engine, consumes SEO findings
-- [AI Marketing Claude](https://github.com/zubair-trabzada/ai-marketing-claude) -- community marketing suite (copy, emails, ads, funnels, CRO)
+`hooks/hooks.json` registers a `PostToolUse` hook on `Edit|Write` that runs
+`hooks/validate-schema.py` (via `hooks/run-python-hook.js`) against the edited
+file — schema validation on save. `${CLAUDE_PLUGIN_ROOT}` is resolved at runtime.
 
-## Key Principles
+---
 
-1. **Progressive Disclosure**: Metadata always loaded, instructions on activation, resources on demand
-2. **Industry Detection**: Auto-detect SaaS, e-commerce, local, publisher, agency
-3. **Parallel Execution**: Full audits spawn up to 15 subagents simultaneously
-4. **Extension System**: DataForSEO MCP for live data, Firecrawl MCP for site crawling, Banana MCP for AI image generation
+## Plugin 2 — marketing-skills (`marketingskills/`)
 
-## Repository Topology (public + private)
+Upstream: [`coreyhaines31/marketingskills`](https://github.com/coreyhaines31/marketingskills)
+(MIT, v2.8.10). Self-contained: its own `.claude-plugin/plugin.json`,
+`marketplace.json`, `README.md`, `VERSIONS.md`, `AGENTS.md` (symlinked as
+`CLAUDE.md`), `skills/`, and `tools/`.
 
-This project is mirrored across two GitHub remotes that share git history.
-Both originate from the same local checkout; neither is a GitHub fork of
-the other (different orgs, no parent/child relationship in the GitHub UI).
+These are **model-invoked** skills — activated automatically from each skill's
+`description` frontmatter when the user's request matches, not via `/slash`
+commands.
 
-| Remote | URL | Visibility | Role |
-|---|---|---|---|
-| `origin` | `https://github.com/AgriciDaniel/claude-seo` | **Public** | Published distribution. Users discover, clone, and install from here. `main` only reflects released history. |
-| `aimh` | `https://github.com/AI-Marketing-Hub/claude-seo` | **Private** | Working repo inside the AI Marketing Hub org. Daily development. v2 branch + post-release work lives here before promotion to public. |
-
-### Workflow
-
-Daily development:
-- Work on `v2` (or feature branches off `v2`) locally.
-- `git push aimh <branch>` to publish work-in-progress to the private repo
-  (Dependabot, Actions, and CI run there).
-
-Promoting to public on release:
-1. Merge `v2` into local `main` when ready to release (fast-forward).
-2. Tag the release locally (`git tag -a vX.Y.Z`).
-3. Push the tag and main to **both** remotes in this order:
-   - First: `git push aimh main && git push aimh vX.Y.Z`
-   - Then: `git push origin main && git push origin vX.Y.Z`
-   - The "tag before merge" sequence (see `feedback_push_caution` memory)
-     applies on `origin` to avoid the `curl|bash` outage window where
-     users pull a tag that doesn't yet point at code on `main`.
-4. `gh release create vX.Y.Z --repo AgriciDaniel/claude-seo` (public-only).
-5. `/release-blog` to publish the release post.
-
-### Safety rules
-
-- **Never push to `origin/main` autonomously.** The public is release-only;
-  pushes are user-authorized per-release.
-- **`aimh` accepts day-to-day pushes.** No release-gate ceremony required
-  for the private remote.
-- **Tags push to private first.** v2.0.0 is the current example: tag lives
-  on `aimh` (private) but not yet on `origin` (public) — that's intentional
-  until release.
-- **History stays shared.** Never rewrite history on either remote with
-  force-push unless explicitly authorized for that specific operation.
-
-### Verifying the topology
-
-```bash
-# Both remotes configured
-git remote -v        # expects: origin (public) + aimh (private)
-
-# Both share main HEAD
-git ls-remote --heads aimh main
-git ls-remote --heads origin main   # origin = aimh/main + 1 public-branding commit (intentional; see docs/WORKFLOW-public-private.md)
-```
-
-Full workflow reference: `docs/WORKFLOW-public-private.md`.
-
-## Release Blog Post
-
-After cutting a new release (git tag + `gh release create`), run:
+### Structure
 
 ```
-/release-blog
+marketingskills/
+  .claude-plugin/plugin.json        # marketing-skills manifest (v2.8.10)
+  AGENTS.md  (CLAUDE.md -> AGENTS.md symlink)
+  README.md  VERSIONS.md
+  skills/                            # 47 skills, each a dir with SKILL.md (+ references/, evals/)
+  tools/
+    clis/                            # CLI helper docs
+    composio/                        # Composio marketing-tools reference
+    integrations/                    # ~40 SaaS integration guides (Stripe, Apollo,
+                                     #   Mailchimp, Ahrefs, Meta/TikTok Ads, Zapier, …)
+  validate-skills.sh                 # Skill validator
+  validate-skills-official.sh        # Official Agent Skills spec validator
 ```
 
-This generates a blog post on https://claude-seo.md/blog/, handles cover image generation, SEO metadata, FAQ schema, internal linking, sitemap/llms.txt updates, Vercel deployment, and Google indexing.
+### The 47 skills
+
+`product-marketing` is the **foundation** — every other skill reads it first
+(checks `.agents/product-marketing.md`, `.claude/product-marketing.md`, or legacy
+`product-marketing-context.md`) for product, audience, and positioning context.
+
+Grouped roughly as:
+
+- **SEO & Content:** `seo-audit`, `ai-seo`, `site-architecture`, `programmatic-seo`,
+  `schema`, `content-strategy`, `aso`
+- **CRO & Onboarding:** `cro`, `signup`, `onboarding`, `popups`, `paywalls`
+- **Copy & Creative:** `copywriting`, `copy-editing`, `cold-email`, `emails`,
+  `social`, `video`, `image`, `sms`, `ad-creative`
+- **Paid & Measurement:** `ads`, `ab-testing`, `analytics`
+- **Growth & Retention:** `referrals`, `free-tools`, `churn-prevention`,
+  `community-marketing`, `lead-magnets`, `co-marketing`, `marketing-loops`
+- **Sales & GTM:** `revops`, `sales-enablement`, `launch`, `pricing`,
+  `competitors`, `competitor-profiling`, `directory-submissions`, `prospecting`,
+  `public-relations`, `offers`
+- **Strategy & Research:** `marketing-ideas`, `marketing-plan`,
+  `marketing-psychology`, `customer-research`, `marketing-council`
+- Plus the product foundation: `product-marketing`
+
+Each skill's **Related Skills** section documents its cross-references.
+
+### marketing-skills conventions
+
+- Every skill dir contains a `SKILL.md` with `name` + `description` + `metadata.version`
+  frontmatter; many add `references/` and `evals/`.
+- Validate changes with `marketingskills/validate-skills.sh` (and
+  `validate-skills-official.sh` for spec compliance).
+- Skills follow the [Agent Skills spec](https://agentskills.io) and are portable
+  across Claude Code, Codex, Cursor, and Windsurf.
+
+---
+
+## Git Workflow
+
+- **Active development branch for this session:** `claude/claude-md-docs-5bpvuu`.
+  Develop, commit, and push here. Create it locally from the latest default branch
+  if it does not exist. Never push to another branch without explicit permission.
+- **Remote:** `origin` → `Evenmore2018/Marketing-` (this is the only remote; the
+  upstream public/private claude-seo topology does **not** exist in this checkout).
+- **Push:** `git push -u origin <branch>`; on network errors retry up to 4× with
+  exponential backoff (2s, 4s, 8s, 16s).
+- Do **not** open a pull request unless explicitly asked. When you do, honor
+  `.github/PULL_REQUEST_TEMPLATE.md`.
+- If this branch's PR is already merged, restart the branch from the latest default
+  branch rather than stacking new commits on merged history.
+
+## Repository Meta
+
+- **CI/tooling:** `.github/workflows/ci.yml`, `.github/workflows/v2.yml`,
+  `.github/dependabot.yml`, `.github/CODEOWNERS`, issue/PR templates under
+  `.github/`. `.devcontainer/devcontainer.json` provisions Python 3.12 + Playwright
+  (Chromium).
+- **Docs at root:** `README.md`, `CHANGELOG.md`, `AGENTS.md` (multi-platform agent
+  instructions), `CONTRIBUTING.md`, `CONTRIBUTORS.md`, `SECURITY.md`, `PRIVACY.md`,
+  `CODE_OF_CONDUCT.md`, `CITATION.cff`.
+- **Which plugin am I editing?** Files under `marketingskills/` belong to the
+  marketing-skills plugin; everything else at root belongs to claude-seo. Apply the
+  matching plugin's rules above.
+
+## Extension System
+
+claude-seo ships optional MCP extension installers in `extensions/`: **DataForSEO**
+(live SEO data), **Firecrawl** (site crawling), **Banana** (AI image generation),
+plus Ahrefs, SE Ranking, Profound, Bing Webmaster, and Unlighthouse. marketing-skills
+documents ~40 SaaS integrations under `marketingskills/tools/integrations/`.
