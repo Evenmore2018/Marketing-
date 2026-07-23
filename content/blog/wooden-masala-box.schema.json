@@ -1,0 +1,116 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://brickbrown.com/blogs/blog/wooden-masala-box-buying-care-guide#article",
+      "headline": "Wooden Masala Box: A Buying & Care Guide for Indian Kitchens",
+      "description": "A wooden masala box keeps spices fresh, cuts kitchen clutter, and looks beautiful on the counter. How to choose, use, and care for one.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://brickbrown.com/cdn/shop/articles/wooden-masala-box-hero-1600x900.webp",
+        "width": 1600,
+        "height": 900,
+        "caption": "A handcrafted wooden masala box with seven spice compartments on a kitchen counter"
+      },
+      "datePublished": "2026-07-23",
+      "dateModified": "2026-07-23",
+      "inLanguage": "en-IN",
+      "author": {
+        "@type": "Organization",
+        "name": "Brick Brown",
+        "url": "https://brickbrown.com"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Brick Brown",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://brickbrown.com/cdn/shop/files/brick-brown-logo.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://brickbrown.com/blogs/blog/wooden-masala-box-buying-care-guide"
+      },
+      "keywords": [
+        "wooden masala box",
+        "masala dabba",
+        "wooden spice box",
+        "spice box for kitchen",
+        "handcrafted masala box",
+        "masala box gift"
+      ],
+      "articleSection": "Kitchen & Serveware"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://brickbrown.com/blogs/blog/wooden-masala-box-buying-care-guide#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://brickbrown.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://brickbrown.com/blogs/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Wooden Masala Box: A Buying & Care Guide"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://brickbrown.com/blogs/blog/wooden-masala-box-buying-care-guide#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is a wooden masala box hygienic for storing spices?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — as long as it has a food-grade, water-resistant finish and you store only dry spices and wipe (never soak) it. That combination keeps it clean and safe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many spices does a wooden masala box hold?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most hold six or seven ground spices, which covers everyday Indian cooking. Each compartment typically fits a week or two of regular use before a refill."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I wash a wooden masala box with water?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Don't submerge or dishwash it. Wipe the compartments with a dry or lightly damp cloth and let it air-dry fully. Oil the exterior occasionally to protect the wood."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which wood is best for a masala box?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Seasoned hardwoods like acacia and sheesham are ideal — dense, durable, and resistant to warping when properly finished."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a wooden masala box a good gift?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It's one of the most reliable gifts you can give: practical, personal, and clearly handcrafted. It works for housewarmings, weddings, and festivals alike."
+          }
+        }
+      ]
+    }
+  ]
+}
